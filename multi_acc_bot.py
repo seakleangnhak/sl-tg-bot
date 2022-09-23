@@ -477,15 +477,15 @@ async def record(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             
                 reply_text = (
                     f"---------->>>>{phone}<<<<----------\n\n"
-                    f"{league}\n"
-                    f"{homeTeam} VS {awayTeamEn}\n"
-                    f"   Order number:  {orderNo}\n"
+                    f"{league}\n\n"
+                    f"{homeTeam}   VS   {awayTeamEn}\n"
+                    f"Order number:     {orderNo}\n"
                     f"Betting options:  Correct Score {odds}@{rate}%\n"
-                    f"     Bet amount:  {amount}\n"
-                    f"      My profit:  {income}"
+                    f"Bet amount:       {amount}\n"
+                    f"My profit:        {income}"
                 )
 
-                await update.message.reply_text(reply_text=reply_text, reply_markup=logged_markup)
+                await update.message.reply_text(reply_text, reply_markup=logged_markup)
 
         except HTTPError as ex:
             reply_text = f"{phone} --> ERROR: {ex}"
