@@ -141,9 +141,10 @@ async def enter_server(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
         r = requests.post(url, json=payload)
         r.raise_for_status()
 
-        if "account" in context.user_data:
-            accounts = list(context.user_data["account"])
+        if context.user_data.get("account"):
+            accounts = context.user_data["account"]
             
+        print(f"Accounts: {accounts}")
         accounts.append(tempAccount)
         context.user_data["account"] = accounts
 
