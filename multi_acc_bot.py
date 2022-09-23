@@ -434,10 +434,11 @@ async def record(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         server = acc["server"]
         phone = acc["phone"]
         today = datetime.date.today()
+        tomorrow  = today - datetime.timedelta(days=-1)
         yesterday = today - datetime.timedelta(days=1)
         url = (f"{server}/api/order/record")
         startTime = yesterday.strftime("%Y-%m-%d") + "T17:00:00.000Z"
-        endTime = today.strftime("%Y-%m-%d") + "T16:59:59.999Z"
+        endTime = tomorrow.strftime("%Y-%m-%d") + "T16:59:59.999Z"
         payload = {
             "startTime": startTime,
             "endTime": endTime
