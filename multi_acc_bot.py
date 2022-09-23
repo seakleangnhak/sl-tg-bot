@@ -5,7 +5,6 @@ import requests
 from requests import HTTPError
 import json
 from math import floor
-import time
 
 from telegram import __version__ as TG_VER
 
@@ -212,8 +211,6 @@ async def check_balance(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
             reply_text = f"{phone} --> ERROR: {ex}"
             await update.message.reply_text(reply_text, reply_markup=logged_markup)
 
-        time.sleep(1)
-
     count = len(accounts)
     reply_text = f"All {count} accounts has been checked"
     await update.message.reply_text(reply_text, reply_markup=logged_markup)
@@ -253,8 +250,6 @@ async def re_login(update: Update, context: ContextTypes.DEFAULT_TYPE):
         except HTTPError as ex:
             reply_text = f"{phone} --> ERROR: {ex}"
             await update.message.reply_text(reply_text, reply_markup=logged_markup)
-
-        time.sleep(1)
 
     count = len(accounts)
     reply_text = f"All {count} accounts has been re-login"
@@ -426,8 +421,6 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 reply_text = f"{phone} --> ERROR: {ex}"
                 await context.bot.send_message(context._user_id, text=reply_text, reply_markup=logged_markup)
 
-            time.sleep(1)
-
         text = f"All {len(accounts)} accounts has been betted at {score}"
         await query.edit_message_text(text=text)
 
@@ -465,8 +458,6 @@ async def record(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         except HTTPError as ex:
             # reply_text = f"{phone} --> ERROR: {ex}"
             await update.message.reply_text(reply_text, reply_markup=logged_markup)
-
-        time.sleep(1)
 
     count = len(accounts)
     reply_text = f"All {count} accounts has been checked"
