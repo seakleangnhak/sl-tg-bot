@@ -196,9 +196,11 @@ async def check_balance(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
             goldCoin = re["goldCoin"]
             # vip = re["userLevel"]
             phone = re["phone"]
+            ipAddress = re["ip_address"]
 
             reply_text = (
-                f"{phone} --> ${roundDown(goldCoin)}"
+                f"{phone} --> ${roundDown(goldCoin)}\n"
+                f"IP Address --> {ipAddress}"
             )
 
             await update.message.reply_text(reply_text, reply_markup=logged_markup)
