@@ -143,10 +143,11 @@ async def enter_server(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
 
         if context.user_data.get("account"):
             accounts = context.user_data["account"]
+            print(f"context Accounts: {accounts}")
             
         print(f"Accounts: {accounts}")
         print(f"Temp Accounts: {tempAccount}")
-        accounts.append(tempAccount)
+        accounts.append({"phone": tempAccount["phone"], "pass": tempAccount["pass"], "server": tempAccount["server"]})
         context.user_data["account"] = accounts
 
         re = json.loads(r.text) #response from server
