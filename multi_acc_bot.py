@@ -182,6 +182,7 @@ async def check_balance(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     
     for acc in accounts:
         server = acc["server"]
+        phone = acc["phone"]
         url = (f"{server}/api/info")
 
         try:
