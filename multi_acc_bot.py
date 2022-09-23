@@ -5,6 +5,7 @@ import requests
 from requests import HTTPError
 import json
 from math import floor
+import datetime 
 
 from telegram import __version__ as TG_VER
 
@@ -431,10 +432,15 @@ async def record(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     
     for acc in accounts:
         server = acc["server"]
+        phone = acc["phone"]
+        today = datetime.date.today()
+        yesterday = today - datetime.timedelta(days=1)
         url = (f"{server}/api/order/record")
+        startTime = yesterday.strftime("%Y-%m-%d") + "T17:00:00.000Z"
+        endTime = today.strftime("%Y-%m-%d") + "T16:59:59.999Z"
         payload = {
-            "startTime": "",
-            "endTime": ""
+            "startTime": startTime,
+            "endTime": endTime
         }
 
         try:
@@ -442,6 +448,7 @@ async def record(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             r.raise_for_status()
 
             re = json.loads(r.text) #response from server
+            orders = re["competitionOrders"]
 
             # uid = re["uid"]
             # nickname = re["nickname"]
@@ -455,8 +462,33 @@ async def record(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
             # await update.message.reply_text(reply_text, reply_markup=logged_markup)
 
+            for order in orders:
+                if order["status"] == 1:
+                    continue
+
+                league = order["leagueEn"]
+                homeTeam = order["homeTeamEn"]
+                awayTeamEn = order["awayTeamEn"]
+                orderNo = order["orderNo"]
+                odds = str(order["odds"]).replace("H", "").replace("A", ":")
+                rate = roundDown(order["rate"] * 100, 2)
+                amount = order["amount"]
+                income = roundDown(order["anticipatedIncome"], 4)
+            
+                reply_text = (
+                    f"----->{phone}<-----\n\n"
+                    f"{league}\n"
+                    f"{homeTeam} VS {awayTeamEn}\n"
+                    f"Order number: {orderNo}\n"
+                    f"Betting options:  Correct Score {odds}@{rate}%\n"
+                    f"Bet amount: {amount}\n"
+                    f"My profit: {income}"
+                )
+
+                await update.message.reply_text(reply_text=reply_text, reply_markup=logged_markup)
+
         except HTTPError as ex:
-            # reply_text = f"{phone} --> ERROR: {ex}"
+            reply_text = f"{phone} --> ERROR: {ex}"
             await update.message.reply_text(reply_text, reply_markup=logged_markup)
 
     count = len(accounts)
