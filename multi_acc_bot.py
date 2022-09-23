@@ -6,6 +6,7 @@ import requests
 from requests import HTTPError
 import json
 from math import floor
+import socket
 
 from telegram import __version__ as TG_VER
 
@@ -196,7 +197,7 @@ async def check_balance(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
             goldCoin = re["goldCoin"]
             # vip = re["userLevel"]
             phone = re["phone"]
-            ipAddress = re["ip_address"]
+            ipAddress = socket.gethostbyname(f"{server}")# re["ip_address"]
 
             reply_text = (
                 f"{phone} --> ${roundDown(goldCoin)}\n"
