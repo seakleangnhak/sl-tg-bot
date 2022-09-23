@@ -285,8 +285,8 @@ async def competition(update: Update, context: ContextTypes.DEFAULT_TYPE):
             homeTeamName = competition["homeTeamNameEn"]
             awayTeamName = competition["awayTeamNameEn"]
             cid = competition["cid"]
-            data = ("info/"
-                f"{cid}/"
+            data = ("info///"
+                f"{cid}///"
                 f"{server}"
             )
 
@@ -313,7 +313,9 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # CallbackQueries need to be answered, even if no notification to the user is needed
     await query.answer()
     
-    data = query.data.split("/")
+    data = query.data.split("///")
+    print(query.data)
+    print(data)
     option = data[0]
     cid = data[1]
     
@@ -343,8 +345,8 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 score = quota['score']
                 scoreStr = str(score).replace("H", "").replace("A", "-")
                 data = (
-                    "order/"
-                    f"{cid}/"
+                    "order///"
+                    f"{cid}///"
                     f"{score}"
                 )
                 
