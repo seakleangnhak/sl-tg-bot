@@ -476,13 +476,13 @@ async def record(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 income = roundDown(order["anticipatedIncome"], 4)
             
                 reply_text = (
-                    f"----->{phone}<-----\n\n"
+                    f"---------->>>>{phone}<<<<----------\n\n"
                     f"{league}\n"
                     f"{homeTeam} VS {awayTeamEn}\n"
-                    f"Order number: {orderNo}\n"
+                    f"   Order number:  {orderNo}\n"
                     f"Betting options:  Correct Score {odds}@{rate}%\n"
-                    f"Bet amount: {amount}\n"
-                    f"My profit: {income}"
+                    f"     Bet amount:  {amount}\n"
+                    f"      My profit:  {income}"
                 )
 
                 await update.message.reply_text(reply_text=reply_text, reply_markup=logged_markup)
