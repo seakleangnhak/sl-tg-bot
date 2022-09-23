@@ -285,9 +285,13 @@ async def competition(update: Update, context: ContextTypes.DEFAULT_TYPE):
             homeTeamName = competition["homeTeamNameEn"]
             awayTeamName = competition["awayTeamNameEn"]
             cid = competition["cid"]
-            data = '{\"option\":\"info\",\"cid\":'+f'\"{cid}\"'+',\"server\":'+f'\"{server}\"'+'}'
+            data = {
+                "option":"info",
+                "cid":cid,
+                "server":server
+            }
 
-            betButton = [InlineKeyboardButton("Info", callback_data=data)]
+            betButton = [InlineKeyboardButton("Info", callback_data=str(data))]
             keyboard.append(betButton)
             reply_markup = InlineKeyboardMarkup(keyboard)
 
