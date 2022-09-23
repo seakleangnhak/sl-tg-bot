@@ -385,6 +385,7 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             server = account['server']
             phone = account['phone']
             url = (f"{server}/api/info")
+            print(f"URL: {url}")
 
             try:
                 r = requests.post(url, json={})
