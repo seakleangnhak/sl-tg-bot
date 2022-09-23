@@ -285,11 +285,10 @@ async def competition(update: Update, context: ContextTypes.DEFAULT_TYPE):
             homeTeamName = competition["homeTeamNameEn"]
             awayTeamName = competition["awayTeamNameEn"]
             cid = competition["cid"]
-            data = {
-                "option":"info",
-                "cid":cid,
-                "server":server
-            }
+            data = ("info/"
+                f"{cid}/"
+                f"{server}"
+            )
 
             betButton = [InlineKeyboardButton("Info", callback_data=str(data))]
             keyboard.append(betButton)
@@ -314,11 +313,12 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # CallbackQueries need to be answered, even if no notification to the user is needed
     await query.answer()
     
-    data = dict(json.loads(query.data.replace("\\", "")))
+    data = query.data.split("/")
+    option = data[0]
+    cid = data[1]
     
-    if data['option'] == 'info':
-        cid = data['cid']
-        server = data['server']
+    if option == 'info':
+        server = data[2]
         url = (f"{server}/api/competition/info")
         params = {
             'cid':cid
@@ -342,7 +342,11 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 rate = roundDown(quota['rate'] * 100, 2)
                 score = quota['score']
                 scoreStr = str(score).replace("H", "").replace("A", "-")
-                data = '{\"option\":\"order\",\"cid\":'+f'\"{cid}\"'+',\"score\":'+f'\"{score}\"'+'}'
+                data = (
+                    "order/"
+                    f"{cid}/"
+                    f"{score}"
+                )
                 
                 betButton = [InlineKeyboardButton(f"{scoreStr}  |   {rate}%", callback_data=data)]
                 keyboard.append(betButton)
@@ -360,9 +364,8 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             reply_text = f"--> ERROR: {ex}"
             await query.edit_message_text(reply_text, reply_markup=logged_markup)
 
-    if data['option'] == 'order':
-        cid = data['cid']
-        odds = data['score']
+    if option == 'order':
+        odds = data[2]
         score = str(odds).replace("H", "").replace("A", "-")
         accounts = []
 
