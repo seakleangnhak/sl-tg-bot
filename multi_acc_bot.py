@@ -1,4 +1,3 @@
-from curses.ascii import isdigit
 import logging
 from typing import Dict
 import hashlib
@@ -412,15 +411,15 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                     if re['code'] != 200:
                         msg = re['msg']
                         reply_text = f"{phone} --> ERROR: {msg}"
-                        await update.message.reply_text(reply_text, reply_markup=logged_markup)
+                        await context.bot.send_message(context._user_id, text=reply_text, reply_markup=logged_markup)
                     
                 except HTTPError as ex:
                     reply_text = f"{phone} --> ERROR: {ex}"
-                    await update.message.reply_text(reply_text, reply_markup=logged_markup)
+                    await context.bot.send_message(context._user_id, text=reply_text, reply_markup=logged_markup)
 
             except HTTPError as ex:
                 reply_text = f"{phone} --> ERROR: {ex}"
-                await update.message.reply_text(reply_text, reply_markup=logged_markup)
+                await context.bot.send_message(context._user_id, text=reply_text, reply_markup=logged_markup)
 
         text = f"All {len(accounts)} accounts has been betted at {score}"
         await query.edit_message_text(text=text)
