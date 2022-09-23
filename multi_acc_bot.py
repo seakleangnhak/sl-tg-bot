@@ -550,6 +550,9 @@ def main() -> None:
                     filters.Regex("^Competition$"), competition
                 ),
                 MessageHandler(
+                    filters.Regex("^Bet record$"), record
+                ),
+                MessageHandler(
                     filters.Regex("^Re-Login$"), re_login
                 ),
                 MessageHandler(
