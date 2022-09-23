@@ -145,6 +145,7 @@ async def enter_server(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
             accounts = context.user_data["account"]
             
         print(f"Accounts: {accounts}")
+        print(f"Temp Accounts: {tempAccount}")
         accounts.append(tempAccount)
         context.user_data["account"] = accounts
 
