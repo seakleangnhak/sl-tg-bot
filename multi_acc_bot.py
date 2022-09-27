@@ -182,6 +182,7 @@ def roundDown(n, d=4):
 
 async def check_balance(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     accounts = context.user_data.get("account")
+    totalAmount = 0.0
     
     for acc in accounts:
         server = acc["server"]
@@ -197,12 +198,15 @@ async def check_balance(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
             # uid = re["uid"]
             # nickname = re["nickname"]
             goldCoin = re["goldCoin"]
+            balance = roundDown(goldCoin)
             # vip = re["userLevel"]
             phone = re["phone"]
             ipAddress = re["ip_address"]
 
+            totalAmount += balance
+
             reply_text = (
-                f"{phone} --> ${roundDown(goldCoin)}\n"
+                f"{phone} --> {balance}\n"
                 f"IP Address --> {ipAddress}"
             )
 
@@ -213,7 +217,7 @@ async def check_balance(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
             await update.message.reply_text(reply_text, reply_markup=logged_markup)
 
     count = len(accounts)
-    reply_text = f"All {count} accounts has been checked"
+    reply_text = f"All {count} accounts has been checked. Total Balance: {totalAmount}"
     await update.message.reply_text(reply_text, reply_markup=logged_markup)
 
 
@@ -429,6 +433,7 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def record(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     accounts = context.user_data.get("account")
+    totalProfit = 0.0
     
     for acc in accounts:
         server = acc["server"]
@@ -451,18 +456,6 @@ async def record(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             re = json.loads(r.text) #response from server
             orders = re["competitionOrders"]
 
-            # uid = re["uid"]
-            # nickname = re["nickname"]
-            # goldCoin = re["goldCoin"]
-            # vip = re["userLevel"]
-            # phone = re["phone"]
-
-            # reply_text = (
-            #     f"{phone} --> ${roundDown(goldCoin)}"
-            # )
-
-            # await update.message.reply_text(reply_text, reply_markup=logged_markup)
-
             for order in orders:
                 if order["status"] == 1:
                     continue
@@ -475,6 +468,8 @@ async def record(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 rate = roundDown(order["rate"] * 100, 2)
                 amount = order["amount"]
                 income = roundDown(order["anticipatedIncome"], 4)
+
+                totalProfit += income
             
                 reply_text = (
                     f"---------->>>>{phone}<<<<----------\n\n"
@@ -493,7 +488,7 @@ async def record(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             await update.message.reply_text(reply_text, reply_markup=logged_markup)
 
     count = len(accounts)
-    reply_text = f"All {count} accounts has been checked"
+    reply_text = (f"All {count} accounts has been checked. Total Profit: {totalProfit}")
     await update.message.reply_text(reply_text, reply_markup=logged_markup)
 
 async def done(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
