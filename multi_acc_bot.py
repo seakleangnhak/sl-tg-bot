@@ -5,7 +5,7 @@ import requests
 from requests import HTTPError
 import json
 from math import floor
-from datetime import datetime
+import datetime
 from pytz import timezone
 
 from telegram import __version__ as TG_VER
