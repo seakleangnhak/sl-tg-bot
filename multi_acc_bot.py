@@ -5,7 +5,7 @@ import requests
 from requests import HTTPError
 import json
 from math import floor
-import datetime
+from datetime import datetime, timedelta
 from pytz import timezone
 
 from telegram import __version__ as TG_VER
@@ -651,9 +651,9 @@ async def record(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     for acc in accounts:
         server = acc["server"]
         phone = acc["phone"]
-        today = datetime.date.today()
-        tomorrow  = today - datetime.timedelta(days=-1)
-        yesterday = today - datetime.timedelta(days=1)
+        today = datetime.today()
+        tomorrow  = today - timedelta(days=-1)
+        yesterday = today - timedelta(days=1)
         url = (f"{server}/api/order/record")
         startTime = yesterday.strftime("%Y-%m-%d") + "T17:00:00.000Z"
         endTime = tomorrow.strftime("%Y-%m-%d") + "T16:59:59.999Z"
