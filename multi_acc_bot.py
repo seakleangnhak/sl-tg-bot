@@ -5,7 +5,8 @@ import requests
 from requests import HTTPError
 import json
 from math import floor
-import datetime 
+from datetime import datetime
+from pytz import timezone
 
 from telegram import __version__ as TG_VER
 
@@ -416,6 +417,7 @@ async def showCompetition(update: Update, context: ContextTypes.DEFAULT_TYPE, is
             leagueName = competition["leagueNameEn"]
             homeTeamName = competition["homeTeamNameEn"]
             awayTeamName = competition["awayTeamNameEn"]
+            scheduleTime = getTime(competition['scheduleTime'])
             cid = competition["cid"]
             option = "timer" if isTimer else "info"
             data = (f"{option}///"
@@ -427,7 +429,7 @@ async def showCompetition(update: Update, context: ContextTypes.DEFAULT_TYPE, is
             reply_markup = InlineKeyboardMarkup([betButton])
 
             reply_text = (
-                f"{leagueName}\n\n"
+                f"{leagueName}\n{scheduleTime}\n\n"
                 f"{homeTeamName} VS {awayTeamName}"
             )
 
@@ -651,7 +653,7 @@ async def record(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         phone = acc["phone"]
         today = datetime.date.today()
         tomorrow  = today - datetime.timedelta(days=-1)
-        yesterday = today - datetime.timedelta(days=2)
+        yesterday = today - datetime.timedelta(days=1)
         url = (f"{server}/api/order/record")
         startTime = yesterday.strftime("%Y-%m-%d") + "T17:00:00.000Z"
         endTime = tomorrow.strftime("%Y-%m-%d") + "T16:59:59.999Z"
@@ -679,12 +681,13 @@ async def record(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 rate = roundDown(order["rate"] * 100, 2)
                 amount = order["amount"]
                 income = roundDown(order["anticipatedIncome"], 4)
+                scheduleTime = getTime(order['scheduleTime'])
 
                 totalProfit += income
             
                 reply_text = (
                     f"---------->>>>{phone}<<<<----------\n\n"
-                    f"{league}\n\n"
+                    f"{league}\n{scheduleTime}\n\n"
                     f"{homeTeam}   VS   {awayTeamEn}\n"
                     f"Order number:     {orderNo}\n"
                     f"Betting options:  Correct Score {odds}@{rate}%\n"
@@ -701,6 +704,13 @@ async def record(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     count = len(accounts)
     reply_text = (f"All {count} accounts has been checked. Total Profit: {totalProfit}")
     await update.message.reply_text(reply_text, reply_markup=logged_markup)
+
+def getTime(dateTime: str) -> str:
+    datetime_str = dateTime.split('.')[0]
+
+    datetime_object = datetime.strptime(datetime_str, '%Y-%m-%dT%H:%M:%S').astimezone(timezone('Asia/Phnom_Penh'))
+
+    return datetime_object.strftime('%B %d, %Y / %H:%M')
 
 async def done(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Display the gathered info and end the conversation."""
