@@ -712,6 +712,24 @@ def getTime(dateTime: str) -> str:
 
     return datetime_object.strftime('%B %d, %Y / %H:%M')
 
+async def set_url(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    accounts = context.user_data.get("account")
+    newUrl = context.args[0]
+    payload = {
+        "url": newUrl
+    }
+    
+    for acc in accounts:
+        server = acc["server"]
+        url = (f"{server}/api/url")
+
+        requests.put(url, json=payload)
+
+    count = len(accounts)
+    reply_text = (f"All {count} accounts has been updated.")
+    await update.message.reply_text(reply_text, reply_markup=logged_markup)
+    
+
 async def done(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Display the gathered info and end the conversation."""
     if "choice" in context.user_data:
@@ -789,6 +807,9 @@ def main() -> None:
                 ),
                 CommandHandler(
                     "UnSetBet", unset_bet
+                ),
+                CommandHandler(
+                    "SetUrl", set_url
                 ),
                 MessageHandler(
                     filters.Regex("^Add New Account$"), add_account
