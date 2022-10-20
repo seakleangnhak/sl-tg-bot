@@ -670,12 +670,14 @@ async def record(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             orders = re["competitionOrders"]
 
             for order in orders:
-                if order["status"] == 1:
+                if order["status"] != 0:
                     continue
 
                 league = order["leagueEn"]
                 homeTeam = order["homeTeamEn"]
                 awayTeamEn = order["awayTeamEn"]
+                fullHomeScore = order["fullHomeScore"]
+                fullAwayScore = order["fullAwayScore"]
                 orderNo = order["orderNo"]
                 odds = str(order["odds"]).replace("H", "").replace("A", ":")
                 rate = roundDown(order["rate"] * 100, 2)
@@ -688,7 +690,7 @@ async def record(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 reply_text = (
                     f"---------->>>>{phone}<<<<----------\n\n"
                     f"{league}\n{scheduleTime}\n\n"
-                    f"{homeTeam}   VS   {awayTeamEn}\n"
+                    f"{homeTeam}({fullHomeScore})   VS   {awayTeamEn}({fullAwayScore})\n"
                     f"Order number:     {orderNo}\n"
                     f"Betting options:  Correct Score {odds}@{rate}%\n"
                     f"Bet amount:       {amount}\n"
