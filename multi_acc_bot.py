@@ -342,8 +342,10 @@ async def log_out(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
 async def set_bet_timer(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     global timer
+    global loggedAccounts
     """Add a job to the queue."""
     chat_id = update.effective_message.chat_id
+    loggedAccounts = context.user_data.get("account")
     try:
         # args[0] should contain the time for the timer in seconds
         due = float(context.args[0])
@@ -589,12 +591,12 @@ async def orderTimer(context: ContextTypes.DEFAULT_TYPE):
     odds = data[1]
     score = str(odds).replace("H", "").replace("A", "-")
 
-    if not context.user_data.get('account'):
+    if len(loggedAccounts) <= 0:
         text = "No account, Retry in 5 minute"
         context.job_queue.run_once(orderTimer, (60*5), chat_id=job.chat_id, name=(f"orderTimer{job.chat_id}"), data=job.data)
         await context.bot.send_message(job.chat_id, text=text, reply_markup=logged_markup)
     else:
-        accounts = context.user_data.get('account')
+        accounts = loggedAccounts
 
         text = f"Timer Bet is in progress..."
         await context.bot.send_message(job.chat_id, text=text, reply_markup=logged_markup)
