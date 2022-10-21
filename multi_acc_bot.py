@@ -589,11 +589,12 @@ async def orderTimer(context: ContextTypes.DEFAULT_TYPE):
     odds = data[1]
     score = str(odds).replace("H", "").replace("A", "-")
 
-    if len(loggedAccounts) == 0:
-        text = "No account"
+    if not context.user_data.get('account'):
+        text = "No account, Retry in 5 minute"
+        context.job_queue.run_once(orderTimer, (60*5), chat_id=job.chat_id, name=(f"orderTimer{job.chat_id}"), data=job.data)
         await context.bot.send_message(job.chat_id, text=text, reply_markup=logged_markup)
     else:
-        accounts = loggedAccounts
+        accounts = context.user_data.get('account')
 
         text = f"Timer Bet is in progress..."
         await context.bot.send_message(job.chat_id, text=text, reply_markup=logged_markup)
